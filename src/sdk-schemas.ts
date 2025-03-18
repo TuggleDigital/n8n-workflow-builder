@@ -1,13 +1,17 @@
+// Direct imports from MCP SDK
 import { 
-  ListToolsRequestSchema as MCPListToolsRequestSchema, 
-  CallToolRequestSchema as MCPCallToolRequestSchema,
-  ListResourcesRequestSchema as MCPListResourcesRequestSchema,
-  ReadResourceRequestSchema as MCPReadResourceRequestSchema,
-  ListResourceTemplatesRequestSchema as MCPListResourceTemplatesRequestSchema
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema, 
+  ListResourceTemplatesRequestSchema
 } from '@modelcontextprotocol/sdk/types.js';
 
-export const ListToolsRequestSchema = MCPListToolsRequestSchema;
-export const CallToolRequestSchema = MCPCallToolRequestSchema;
-export const ListResourcesRequestSchema = MCPListResourcesRequestSchema;
-export const ReadResourceRequestSchema = MCPReadResourceRequestSchema;
-export const ListResourceTemplatesRequestSchema = MCPListResourceTemplatesRequestSchema;
+// Export the schemas for use in the application
+export {
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListResourceTemplatesRequestSchema
+};
