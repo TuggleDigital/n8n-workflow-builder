@@ -12,17 +12,18 @@ import {
 import * as n8nApi from './services/n8nApi';
 import { WorkflowBuilder } from './services/workflowBuilder';
 import { validateWorkflowSpec } from './utils/validation';
+import { N8N_HOST, N8N_API_KEY } from './config/constants';
 
-console.log("ListToolsRequestSchema:", ListToolsRequestSchema);
-console.log("CallToolRequestSchema:", CallToolRequestSchema);
-
-if (!ListToolsRequestSchema) {
-  console.error("ListToolsRequestSchema is undefined!");
-}
-
-if (!CallToolRequestSchema) {
-  console.error("CallToolRequestSchema is undefined!");
-}
+// Start-up information
+console.log('================================================');
+console.log('Starting n8n Workflow Builder MCP Server');
+console.log('================================================');
+console.log('Node.js version:', process.version);
+console.log('Environment:', process.env.NODE_ENV || 'development');
+console.log('Current working directory:', process.cwd());
+console.log('n8n Host:', N8N_HOST || 'Not set');
+console.log('n8n API Key:', N8N_API_KEY ? '****' + N8N_API_KEY.slice(-4) : 'Not set');
+console.log('================================================');
 
 class N8NWorkflowServer {
   private server: InstanceType<typeof Server>;
@@ -542,11 +543,30 @@ class N8NWorkflowServer {
   }
 
   async run() {
-    const transport = new StdioServerTransport();
-    await this.server.connect(transport);
-    console.error('N8N Workflow Builder MCP server running on stdio');
+    try {
+      const transport = new StdioServerTransport();
+      console.log('Connecting to stdio transport...');
+      await this.server.connect(transport);
+      console.log('N8N Workflow Builder MCP server running successfully on stdio');
+    } catch (error) {
+      console.error('Failed to start MCP server:', error);
+      process.exit(1);
+    }
   }
 }
 
+// Handle global uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Promise Rejection:', reason);
+});
+
+// Start the server
 const server = new N8NWorkflowServer();
-server.run().catch(console.error);
+server.run().catch(error => {
+  console.error('Failed to run MCP server:', error);
+  process.exit(1);
+});
